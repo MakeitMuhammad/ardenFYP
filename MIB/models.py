@@ -31,7 +31,7 @@ class UserProfile(models.Model):
     address = models.TextField(blank=True)
     qualification = models.CharField(max_length=100, blank=True)
     last_work_company = models.CharField(max_length=100, blank=True)
-    profile_pic_url = models.ImageField(upload_to='pictures/profile/', blank=True, null=True)
+    profile_pic_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.full_name}'s Profile"
