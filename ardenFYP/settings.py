@@ -145,6 +145,6 @@ cloudinary.config(
 )
 
 #for uploading on hosting
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['ardenfyp.onrender.com']  # Replace with your real domain
 STATIC_ROOT = BASE_DIR / 'staticfiles'

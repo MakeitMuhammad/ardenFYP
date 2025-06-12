@@ -343,17 +343,26 @@ def newproject(request):
                 api_key="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",
             )
 
+            # Create chat completion
+        #test
+        try:
+
             completion = client.chat.completions.create(
                 model="deepseek/deepseek-r1:free",
                 messages=[
                     {"role": "system", "content": "You are a startup mentor helping break down business ideas into tasks."},
                     {"role": "user", "content": prompt}
-                ]
+                ],timeout=120
             )
 
             # Extract tasks from response
             content = completion.choices[0].message.content.strip()
             task_list = [line.strip("-•0123456789. ") for line in content.split('\n') if line.strip()]
+       #test
+        except Exception as e:
+            messages.error(request, f"AI task generation failed: {e}")
+            return redirect("newproject") 
+        #---
 
             # Save tasks to DB
             for task in task_list:
