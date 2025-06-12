@@ -1,0 +1,23 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+<div class="border-stylish p-4 mb-5">
+    <h1 class="text-center">Project Tasks 📝</h1>
+<h2>Tasks for Project: {{ project.title }}</h2>
+
+{% if tasks %}
+    <ul class="list-group">
+        {% for task in tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{ forloop.counter }}. {{ task.task }}</span>
+                <span class="badge bg-primary">{{ task.status }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No tasks for this project.</p>
+{% endif %}
+
+<a href="{% url 'projects' %}" class="btn btn-secondary mt-3">← Back to Projects</a>
+</div>
+{% endblock %}

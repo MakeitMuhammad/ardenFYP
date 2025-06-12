@@ -1,0 +1,545 @@
+{% extends 'base2.html' %} {% block content %}
+<!-- Welcome Modal -->
+<div
+  class="modal fade"
+  id="welcomeModal"
+  tabindex="-1"
+  aria-labelledby="welcomeModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="welcomeModalLabel">Welcome</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Welcome to your Dashboard, {{ user.full_name }}!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Welcome Modal -->
+<div>
+<!-- Dashboard Content -->
+<div class="row">
+  <div class="col-md-4 mb-3">
+    <div class="card" id="firstDiv">
+      <div class="card-body">
+        <div class="d-flex flex-column align-items-center text-center">
+          <img
+            src="{% if user.userprofile.profile_pic_url %}{{ user.userprofile.profile_pic_url }}{% else %}/static/pictures/avatar7.png{% endif %}"
+          alt="Profile Picture"
+          class="rounded-circle"
+          style="object-fit: cover; width: 150px; height: 150px;"
+          onclick="openPictureModal()"
+            />
+      <div class="mt-3">
+        <h4>{{user.full_name}}</h4>
+        <p class="text-muted font-size-sm mb-1">Last Employed At: {{ user.userprofile.last_work_company }}</p>
+        <p class="text-secondary ">{{ user.userprofile.qualification }}</p>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Picture Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="profilePicForm" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title" id="uploadModalLabel">Upload Profile Picture</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="file" name="profile_pic" class="form-control" accept="image/*" required />
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- End of Picture Modal -->
+
+
+
+
+       
+
+    <!-- Second Card -->
+    <div class="card mt-3">
+      <ul class="list-group list-group-flush">
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
+        onclick="openSocialModal('website')"
+      >
+        <h6 class="mb-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-globe mr-2 icon-inline"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path
+          d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+          ></path></svg
+        >Website
+        </h6>
+        <span class="text-secondary" data-social="website">{{user.social_link.website}}</span>
+      </li>
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
+        onclick="openSocialModal('github')"
+      >
+        <h6 class="mb-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-github mr-2 icon-inline"
+        >
+          <path
+          d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+          ></path></svg
+        >Github
+        </h6>
+        <span class="text-secondary" data-social="github">{{user.social_link.github}}</span>
+      </li>
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
+        onclick="openSocialModal('twitter')"
+      >
+        <h6 class="mb-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-twitter mr-2 icon-inline text-info"
+        >
+          <path
+          d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"
+          ></path></svg
+        >Twitter
+        </h6>
+        <span class="text-secondary" data-social="twitter">{{user.social_link.twitter}}</span>
+      </li>
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
+        onclick="openSocialModal('instagram')"
+      >
+        <h6 class="mb-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-instagram mr-2 icon-inline text-danger"
+        >
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg
+        >Instagram
+        </h6>
+        <span class="text-secondary" data-social="instagram">{{user.social_link.instagram}}</span>
+      </li>
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center flex-wrap"
+        onclick="openSocialModal('facebook')"
+      >
+        <h6 class="mb-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-facebook mr-2 icon-inline text-primary"
+        >
+          <path
+          d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+          ></path></svg
+        >Facebook
+        </h6>
+        <span class="text-secondary" data-social="facebook">{{user.social_link.facebook}}</span>
+      </li>
+      </ul>
+    </div>
+    </div>
+
+
+<!-- social link Modal --> 
+<div class="modal fade" id="socialModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="socialModalLabel">Update Social Link  </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="socialField">
+        <label for="socialValue" class="form-label">URL</label>
+        <input type="text" id="socialValue" class="form-control">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="saveSocialLink()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <!----------------------------------------------->
+
+  <!-- info table -->
+  <div class="col-md-8">
+    <div class="card mb-3" id="thirdDiv" style="height: 100%">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-3"><h6 class="mb-0">Full Name</h6></div>
+          <div class="col-sm-9 text-secondary" id="full_name">{{user.full_name}}</div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-3"><h6 class="mb-0">Email</h6></div>
+          <div class="col-sm-9 text-secondary" id="email">{{user.email}}</div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-3"><h6 class="mb-0">Phone</h6></div>
+          <div class="col-sm-9 text-secondary" id="phone">{{user.userprofile.phone}}</div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-3"><h6 class="mb-0">Mobile</h6></div>
+          <div class="col-sm-9 text-secondary" id="mobile">{{user.userprofile.mobile}}</div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-3"><h6 class="mb-0">Address</h6></div>
+          <div class="col-sm-9 text-secondary" id="address">{{user.userprofile.address}}</div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-3"><h6 class="mb-0">Qualification</h6></div>
+          <div class="col-sm-9 text-secondary" id="qualification">{{user.userprofile.qualification}}</div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-3"><h6 class="mb-0">Last Worked Company</h6></div>
+          <div class="col-sm-9 text-secondary" id="last_work_company">{{user.userprofile.last_work_company}}</div>
+        </div>
+        <hr />
+      </div>
+      <div class="card-footer text-start">
+        <button class="btn btn-info" onclick="makeEditable()">Edit</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<hr />  
+<!-- End of profile Content -->
+
+<!--user section-->
+<div class="text-center mt-5">
+  <h1 class="bg-secondary  p-2 rounded-3    d-inline-block ">My Projects</h1>
+</div>
+<div class="container-fluid mt-3 px-5">
+ 
+
+  {% if projects %}
+    <div class="row g-4 mb-5">
+      {% for project in projects %}
+        <div class="col-12 mb-2">
+          <div class="card shadow rounded-4 border-0">
+            <div class="card-body d-flex align-items-center ">
+              <h4 class="card-title text-primary ">{{ project.title }}</h4>
+              <div class="vr mx-3"></div>
+              {% if project.pending_task %}
+                <div class="d-flex justify-content-between align-items-center flex-grow-1">
+                    <span class="fw fs-5 fst-italic">{{ project.pending_task.task }}</span>
+                  <form method="post" action="{% url 'complete_task' project.pending_task.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-lg btn-success">Mark Completed</button>
+                  </form>
+                </div>
+              {% else %}
+                <p class="text-muted m fs-5 m-2">All tasks completed ✅</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center py-5 mb-3">
+      <h3>No Projects Yet</h3>
+      <a href="{% url 'newproject' %}" class="btn btn-lg btn-primary mt-3">Add New Project</a>
+    </div>
+  {% endif %}
+</div>
+
+
+
+
+
+
+
+
+<!-- Area for scrpts-->
+<!-- script for social link modal -->
+<script>
+  function openSocialModal(field, currentValue) {
+    document.getElementById('socialField').value = field;
+    // Set the current value in the input field
+  document.getElementById('socialValue').value = currentValue;
+    const current = document.querySelector(`span[data-social="${field}"]`)?.textContent.trim();
+    document.getElementById('socialValue').value = current || '';
+    const capitalized = field.charAt(0).toUpperCase() + field.slice(1);
+  document.getElementById('socialModalLabel').innerText = `Update ${capitalized} Link`;
+
+    new bootstrap.Modal(document.getElementById('socialModal')).show();
+  }
+
+  function saveSocialLink() {
+    const field = document.getElementById('socialField').value;
+    const value = document.getElementById('socialValue').value;
+
+    fetch('/profile/update-social/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ field, value })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.querySelector(`span[data-social="${field}"]`).textContent = value;
+        bootstrap.Modal.getInstance(document.getElementById('socialModal')).hide();
+      } else {
+        alert("Error: " + (data.error || "Unable to save"));
+      }
+    })
+    .catch(error => console.error("Save error:", error));
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [k, v] = cookie.trim().split('=');
+      if (k === name) return decodeURIComponent(v);
+    }
+    return cookieValue;
+  }
+</script>
+
+
+
+
+
+
+
+<!-- script for profile picture upload -->
+<script>
+  function openPictureModal() {
+    const modal = new bootstrap.Modal(document.getElementById('uploadModal'));
+    modal.show();
+  }
+
+  document.getElementById('profilePicForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    console.log("FormData has:", formData.get('profile_pic')); 
+
+    fetch('/profile/upload-picture/', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Update profile image on page
+        const img = document.querySelector('img[onclick="openPictureModal()"]');
+        img.src = data.url;
+        bootstrap.Modal.getInstance(document.getElementById('uploadModal')).hide();
+      } else {
+        alert('Upload failed.');
+      }
+    })
+    .catch(err => {
+      alert('Error uploading image');
+      console.error(err);
+    });
+  });
+
+  // Helper to get CSRF token
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+
+
+
+
+
+<!-- script for edit info -->
+<script>
+  function makeEditable() {
+    const fields = [
+      'full_name', 'email', 'phone', 'mobile', 'address', 'qualification', 'last_work_company'
+    ];
+
+    fields.forEach(field => {
+      const div = document.getElementById(field);
+      const currentValue = div.textContent.trim();
+      div.innerHTML = `<input class="form-control" id="${field}_input" value="${currentValue}">`;
+    });
+
+    // Change Edit button to Save
+    const footer = document.querySelector(".card-footer");
+    footer.innerHTML = `<button class="btn btn-success" onclick="saveInfo()">Save</button>`;
+  }
+
+  function saveInfo() {
+    const fields = [
+      'full_name', 'email', 'phone', 'mobile', 'address', 'qualification', 'last_work_company'
+    ];
+
+    const data = {};
+
+    fields.forEach(field => {
+      const input = document.getElementById(`${field}_input`);
+      if (input) {
+        data[field] = input.value;
+      }
+    });
+
+    fetch('/profile/update/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result.success) {
+        // Update the DOM back to plain text
+        fields.forEach(field => {
+          const div = document.getElementById(field);
+          div.innerHTML = data[field];
+        });
+
+        // Restore Edit button
+        const footer = document.querySelector(".card-footer");
+        footer.innerHTML = `<button class="btn btn-info" onclick="makeEditable()">Edit</button>`;
+      } else {
+        alert('Error saving data: ' + (result.error || 'Unknown error'));
+      }
+    })
+    .catch(error => {
+      alert('Error saving data');
+      console.error('Save error:', error);
+    });
+  }
+
+  // Helper to get CSRF token from cookie (Django)
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+
+<!--height manager-->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const firstDiv = document.getElementById("firstDiv");
+    const secondDiv = document.getElementById("secondDiv");
+    const thirdDiv = document.getElementById("thirdDiv");
+
+    const totalHeight = firstDiv.offsetHeight + secondDiv.offsetHeight;
+    thirdDiv.style.height = totalHeight + "px";
+  });
+</script>
+
+<!-- start modal -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var myModal = new bootstrap.Modal(document.getElementById("welcomeModal"));
+    myModal.show();
+  });
+</script>
+
+{% endblock %}
