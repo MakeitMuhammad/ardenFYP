@@ -130,10 +130,16 @@ logger = logging.getLogger(__name__)
 @login_required(login_url='login')
 def upload_profile_picture(request):
     if request.method == 'POST' and request.FILES.get('profile_pic'):
+        profile_pic = request.FILES['profile_pic']
         user_profile = request.user.userprofile
-        user_profile.profile_pic_url = request.FILES['profile_pic']
+        user_profile.profile_pic_url = profile_pic  # Cloudinary handles upload
         user_profile.save()
-        return JsonResponse({'success': True, 'url': user_profile.profile_pic_url.url})
+
+        return JsonResponse({
+            'success': True,
+            'url': user_profile.profile_pic_url.url  # Cloudinary URL
+        })
+
     return JsonResponse({'success': False, 'error': 'No file uploaded'})
 
 #-------------------------------------------------
