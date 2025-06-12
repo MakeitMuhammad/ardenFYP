@@ -129,29 +129,11 @@ logger = logging.getLogger(__name__)
 
 @login_required(login_url='login')
 def upload_profile_picture(request):
-    try:
-        print(request.FILES)  # See if it's empty
-        if request.method == 'POST' and request.FILES.get('profile_pic'):
-            profile_pic = request.FILES['profile_pic']
-            filename = profile_pic.name
-
-            upload_dir = os.path.join(settings.MEDIA_ROOT, 'pictures', 'profile')
-            os.makedirs(upload_dir, exist_ok=True)
-            save_path = os.path.join(upload_dir, filename)
-
-            with open(save_path, 'wb+') as f:
-                for chunk in profile_pic.chunks():
-                    f.write(chunk)
-
-            relative_url = f'/media/pictures/profile/{filename}'
-            request.user.userprofile.profile_pic_url = relative_url
-            request.user.userprofile.save()
-
-            return JsonResponse({'success': True, 'url': relative_url})
-    except Exception as e:
-        logger.exception("Error uploading profile picture")
-        return JsonResponse({'success': False, 'error': str(e)})
-
+    if request.method == 'POST' and request.FILES.get('profile_pic'):
+        user_profile = request.user.userprofile
+        user_profile.profile_pic_url = request.FILES['profile_pic']
+        user_profile.save()
+        return JsonResponse({'success': True, 'url': user_profile.profile_pic_url.url})
     return JsonResponse({'success': False, 'error': 'No file uploaded'})
 
 #-------------------------------------------------
