@@ -20,6 +20,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.urls import reverse
 from collections import OrderedDict
+import os
 
 # Create your views here.
 
@@ -249,9 +250,9 @@ def aibuddy(request):
 
     if request.method == "POST":
         client = OpenAI(
-            base_url="https://openrouter.ai/api/v1",
-            api_key="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",
-        )
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY")
+)
 
         completion = client.chat.completions.create(
             model="deepseek/deepseek-r1:free",
@@ -339,9 +340,9 @@ def newproject(request):
 
             # Call OpenAI
             client = OpenAI(
-                base_url="https://openrouter.ai/api/v1",
-                api_key="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",
-            )
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY")
+)
 
             # Create chat completion
         #test
