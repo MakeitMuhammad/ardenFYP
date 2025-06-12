@@ -1,0 +1,208 @@
+{%extends 'base.html' %} {% block content %}
+<main class="container">
+  <div class="container-fluid px-0">
+    <div
+      id="myCarousel"
+      class="carousel slide mb-5"
+      data-bs-ride="carousel"
+      data-bs-interval="2000"
+    >
+      <div class="carousel-indicators">
+        <button
+          type="button"
+          data-bs-target="#myCarousel"
+          data-bs-slide-to="0"
+          class="active"
+          aria-label="Slide 1"
+          aria-current="true"
+        ></button>
+        <button
+          type="button"
+          data-bs-target="#myCarousel"
+          data-bs-slide-to="1"
+          aria-label="Slide 2"
+        ></button>
+        <button
+          type="button"
+          data-bs-target="#myCarousel"
+          data-bs-slide-to="2"
+          aria-label="Slide 3"
+        ></button>
+      </div>
+      <div class="carousel-inner rounded-3">
+        <!-- Slide 1: Project Management -->
+        <div class="carousel-item active">
+          <div class="position-relative">
+            <img
+              src="https://picsum.photos/seed/strategy/1200/400"
+              class="d-block w-100 img-fluid"
+              alt="Project planning"
+            />
+            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+          </div>
+          <div class="container">
+            <div class="carousel-caption text-start text-white">
+              <h1>Plan and Track Your Vision</h1>
+              <p class="opacity-75">
+                Build project roadmaps, break tasks into milestones, and track your business journey step by step with ease.
+              </p>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Slide 2: Expert Guidance -->
+        <div class="carousel-item">
+          <div class="position-relative">
+            <img
+              src="https://picsum.photos/seed/expert/1200/400"
+              class="d-block w-100 img-fluid"
+              alt="Expert consultation"
+            />
+            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+          </div>
+          <div class="container">
+            <div class="carousel-caption text-white">
+              <h1>Expert Guidance On Demand</h1>
+              <p>
+                Connect with industry professionals to receive personalized advice and strategic insights tailored to your challenges.
+              </p>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Slide 3: AI-Powered Support -->
+        <div class="carousel-item">
+          <div class="position-relative">
+            <img
+              src="https://picsum.photos/seed/aihelp/1200/400"
+              class="d-block w-100 img-fluid"
+              alt="AI insights"
+            />
+            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+          </div>
+          <div class="container">
+            <div class="carousel-caption text-end text-white">
+              <h1>Leverage AI Insights</h1>
+              <p>
+                Use intelligent suggestions and data-driven recommendations to supercharge your decision-making process.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button
+        data-bs-target="#myCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#myCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Featured Blog Post -->
+  <section class="p-4 p-md-5 mb-4 rounded bg-body-secondary text-body-emphasis">
+    <div class="col-lg-6 px-0">
+      <h1 class="display-4 fst-italic">
+        Make It Believe: <br />
+        'A business initiative tracking web application’
+      </h1>
+      <p class="lead my-3">
+        Make It Believe is a dynamic platform designed to connect aspiring
+        creators with seasoned experts. Users can register, build project
+        roadmaps, track task progress, and receive personalized content based on
+        their interests.
+      </p>
+      <p class="lead mb-0">
+        <a href="#" class="text-body-emphasis fw-bold"></a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Post Highlights -->
+  <section class="row mb-2">
+    <!-- Post 1 -->
+    <div class="col-md-6">
+      <div
+        class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
+      >
+        <div class="col p-4 d-flex flex-column position-static">
+          <strong class="d-inline-block mb-2 text-primary-emphasis"
+            >Project</strong
+          >
+          <h3 class="mb-0">Manage your project</h3>
+          <p class="card-text mb-auto">
+            Effectively manage your project by breaking it into smaller tasks,
+            setting clear deadlines, and prioritizing based on importance. Use
+            tools to track progress and stay on schedule. <br />
+            <em>Stay organized and achieve your goals!</em>
+          </p>
+          <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">
+            <svg class="bi" aria-hidden="true">
+              <use xlink:href="#chevron-right" />
+            </svg>
+          </a>
+        </div>
+        <div class="col-auto d-none d-lg-block">
+          <div
+            class="d-flex justify-content-center align-items-center"
+            style="width: 200px; height: 250px"
+          >
+            <img
+              src="https://picsum.photos/seed/girl/600/400"
+              alt="Thumbnail"
+              class="img-fluid h-100 w-100 object-fit-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 2 -->
+    <div class="col-md-6">
+      <div
+      class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
+      >
+      <div class="col p-4 d-flex flex-column position-static">
+        <strong class="d-inline-block mb-2 text-success-emphasis"
+        >Consultation</strong
+        >
+        <h3 class="mb-0">Expert Guidance</h3>
+        
+        <p class="mb-auto">
+        Connect with industry experts and leverage AI-driven insights to make informed decisions. 
+        Get personalized advice tailored to your unique challenges and goals.
+        </p>
+        
+      </div>
+      <div class="col-auto d-none d-lg-block">
+        <div
+        class="d-flex justify-content-center align-items-center"
+        style="width: 200px; height: 250px"
+        >
+        <img
+          src="https://picsum.photos/seed/expert/600/400"
+          alt="Thumbnail"
+          class="img-fluid h-100 w-100 object-fit-cover"
+        />
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  
+
+  {% endblock %}
+</main>

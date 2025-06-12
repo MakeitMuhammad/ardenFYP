@@ -1,0 +1,60 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Search Users</h2>
+
+  <div class="input-group mb-3">
+    <select id="searchMode" class="form-select" style="max-width: 150px;">
+      <option value="name">Name</option>
+      <option value="skill">Skill</option>
+    </select>
+    <input type="text" id="searchInput" class="form-control" placeholder="Search..." aria-label="Search">
+  </div>
+
+  <ul class="list-group" id="searchResults">
+    <!-- Results will appear here -->
+  </ul>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById("searchInput");
+  const searchMode = document.getElementById("searchMode");
+  const resultsList = document.getElementById("searchResults");
+
+  function updateResults(query) {
+    const mode = searchMode.value;
+    if (!query) {
+      resultsList.innerHTML = "";
+      return;
+    }
+
+    fetch(`/search/?q=${encodeURIComponent(query)}&mode=${mode}`, {
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+    .then(response => response.json())
+    .then(data => {
+      resultsList.innerHTML = "";
+      data.results.forEach(user => {
+        const li = document.createElement("li");
+        li.className = "list-group-item list-group-item-action";
+        li.textContent = user.name;
+        li.onclick = () => {
+          window.location.href = `/profile/${user.id}/`;
+        };
+        resultsList.appendChild(li);
+      });
+    });
+  }
+
+  searchInput.addEventListener("input", function () {
+    updateResults(this.value);
+  });
+
+  searchMode.addEventListener("change", function () {
+    updateResults(searchInput.value);
+  });
+});
+</script>
+{% endblock %}
