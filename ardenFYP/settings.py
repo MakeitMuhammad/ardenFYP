@@ -132,5 +132,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 #for uploading on hosting
 DEBUG = False
-ALLOWED_HOSTS = ['yourdomain.com']  # Replace with your real domain
+ALLOWED_HOSTS = ['https://ardenfyp.onrender.com']  # Replace with your real domain
 STATIC_ROOT = BASE_DIR / 'staticfiles'
