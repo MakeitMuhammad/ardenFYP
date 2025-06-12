@@ -38,7 +38,7 @@
       <div class="card-body">
         <div class="d-flex flex-column align-items-center text-center">
           <img
-            src="{% if user.userprofile.profile_pic_url %}{{ user.userprofile.profile_pic_url }}{% else %}/static/pictures/avatar7.png{% endif %}"
+            src="{% if user.userprofile.profile_pic_url %}{{ user.userprofile.profile_pic_url }}{% else %}{% static 'pictures/avatar7.png' %}{% endif %}"
           alt="Profile Picture"
           class="rounded-circle"
           style="object-fit: cover; width: 150px; height: 150px;"

@@ -139,9 +139,9 @@ CLOUDINARY_STORAGE = {
 }
 
 cloudinary.config(
-    cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
-    api_key=CLOUDINARY_STORAGE['API_KEY'],
-    api_secret=CLOUDINARY_STORAGE['API_SECRET']
+      cloud_name=CLOUDINARY_STORAGE['cloud_name'],
+    api_key=CLOUDINARY_STORAGE['api_key'],
+    api_secret=CLOUDINARY_STORAGE['api_secret']
 )
 
 #for uploading on hosting
