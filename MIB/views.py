@@ -249,6 +249,7 @@ def aibuddy(request):
         return render(request, "aibuddy.html")
 
     if request.method == "POST":
+        print("ENV DEBUG:", os.getenv("OPENROUTER_API_KEY"))
         client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key=os.getenv("OPENROUTER_API_KEY")
@@ -339,6 +340,7 @@ def newproject(request):
             prompt = "Based on the following business information, list only the exact actionable tasks in numbered format needed to start and launch the business no headings no footer no starting message just list of tasks :\n\n" + "\n".join(answers)
 
             # Call OpenAI
+            print("ENV DEBUG:", os.getenv("OPENROUTER_API_KEY"))
             client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key=os.getenv("OPENROUTER_API_KEY")
