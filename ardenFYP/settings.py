@@ -29,7 +29,8 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost").split(",")
 # Application definition
 
 INSTALLED_APPS = [
-    
+    'cloudinary',
+    'cloudinary_storage',
     'MIB.apps.MibConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -126,9 +127,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 #manually added media root
 
-
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+CLOUDINARY_STORAGE = {
+    'cloud_name': "dukerw4pa", 
+    'api_key': '842233588424184', 
+    'api_secret': 'IreXxAH0N9KRDchjvhJIivG0ch4',
+}
 
 #for uploading on hosting
 DEBUG = False
