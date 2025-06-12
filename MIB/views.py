@@ -125,21 +125,31 @@ def update_profile(request):
 #profile picute update
 #-------------------------------------------------
 import logging
+import cloudinary.uploader
 logger = logging.getLogger(__name__)
 
 @login_required(login_url='login')
 def upload_profile_picture(request):
     if request.method == 'POST' and request.FILES.get('profile_pic'):
-        profile_pic = request.FILES['profile_pic']
-        user_profile = request.user.userprofile
-        user_profile.profile_pic_url = profile_pic  # Cloudinary handles upload
-        user_profile.save()
+        try:
+            upload_result = cloudinary.uploader.upload(
+                request.FILES['profile_pic'],
+                folder='profile_pics/'  # Optional: put uploads into a specific folder
+            )
 
-        return JsonResponse({
-            'success': True,
-            'url': user_profile.profile_pic_url.url  # Cloudinary URL
-        })
+            profile_url = upload_result.get('secure_url')
+            if not profile_url:
+                raise Exception("Cloudinary did not return a URL")
 
+            user_profile = request.user.userprofile
+            user_profile.profile_pic_url = profile_url
+            user_profile.save()
+
+            return JsonResponse({'success': True, 'url': profile_url})
+        except Exception as e:
+            logger.error(f"Cloudinary upload failed: {e}")
+            return JsonResponse({'success': False, 'error': str(e)})
+    
     return JsonResponse({'success': False, 'error': 'No file uploaded'})
 
 #-------------------------------------------------

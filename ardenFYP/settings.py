@@ -126,7 +126,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 #manually added media root
-
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -135,6 +137,12 @@ CLOUDINARY_STORAGE = {
     'api_key': '842233588424184', 
     'api_secret': 'IreXxAH0N9KRDchjvhJIivG0ch4',
 }
+
+cloudinary.config(
+    cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
+    api_key=CLOUDINARY_STORAGE['API_KEY'],
+    api_secret=CLOUDINARY_STORAGE['API_SECRET']
+)
 
 #for uploading on hosting
 DEBUG = False
