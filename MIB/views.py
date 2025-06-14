@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.http import JsonResponse
 import json
+import requests
 from openai import OpenAI
 from django.shortcuts import get_object_or_404
 from .models import UserProfile, Project, ProjectTask, Tag, CustomUser, Message, Notification
@@ -242,51 +243,100 @@ def add_skills(request):
 #-------------------------------------------------
 
 
-@login_required(login_url='login')  # 'login' should match the name in your URLconf
+# @login_required(login_url='login')  # 'login' should match the name in your URLconf
+# @csrf_exempt
+# def aibuddy(request):
+#     if request.method == "GET":
+#         return render(request, "aibuddy.html")
+
+#     if request.method == "POST":
+#         print("ENV DEBUG:", os.getenv("OPENROUTER_API_KEY"))
+#         client = OpenAI(
+#     base_url="https://openrouter.ai/api/v1",
+#     api_key=os.getenv("OPENROUTER_API_KEY")
+# )
+
+#         completion = client.chat.completions.create(
+#             model="deepseek/deepseek-r1:free",
+#             messages=[
+#                 {"role": "user", "content": "Hello AI!"}
+#             ]
+#         )
+
+#         print(completion.choices[0].message.content)
+
+#         data = json.loads(request.body)
+#         user_message = data.get('message', '')
+
+#         try:
+#             completion = client.chat.completions.create(
+#                 extra_headers={
+#                     "HTTP-Referer": "http://127.0.0.1:8000",  # replace with your domain
+#                     "X-Title": "AI Buddy Chatbot",
+#                 },
+#                 extra_body={},
+#                 model="deepseek/deepseek-r1:free",
+#                 messages=[
+#                     {
+#                         "role": "user",
+#                         "content": user_message
+#                     }
+#                 ]
+#             )
+#             bot_reply = completion.choices[0].message.content
+#         except Exception as e:
+#             bot_reply = f"Error: {str(e)}"
+
+#         return JsonResponse({"reply": bot_reply})
+
+@login_required(login_url='login')
 @csrf_exempt
 def aibuddy(request):
     if request.method == "GET":
         return render(request, "aibuddy.html")
 
     if request.method == "POST":
-        print("ENV DEBUG:", os.getenv("OPENROUTER_API_KEY"))
-        client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=os.getenv("OPENROUTER_API_KEY")
-)
-
-        completion = client.chat.completions.create(
-            model="deepseek/deepseek-r1:free",
-            messages=[
-                {"role": "user", "content": "Hello AI!"}
-            ]
-        )
-
-        print(completion.choices[0].message.content)
-
-        data = json.loads(request.body)
-        user_message = data.get('message', '')
-
         try:
-            completion = client.chat.completions.create(
-                extra_headers={
-                    "HTTP-Referer": "http://127.0.0.1:8000",  # replace with your domain
-                    "X-Title": "AI Buddy Chatbot",
-                },
-                extra_body={},
-                model="deepseek/deepseek-r1:free",
-                messages=[
-                    {
-                        "role": "user",
-                        "content": user_message
-                    }
-                ]
-            )
-            bot_reply = completion.choices[0].message.content
-        except Exception as e:
-            bot_reply = f"Error: {str(e)}"
+            # Load message from request
+            data = json.loads(request.body)
+            user_message = data.get("message", "")
+            if not user_message:
+                return JsonResponse({"reply": "Empty message."}, status=400)
 
-        return JsonResponse({"reply": bot_reply})
+            # Load API key from environment
+            api_key = os.getenv("OPENROUTER_API_KEY")
+            if not api_key:
+                return JsonResponse({"reply": "API key missing."}, status=500)
+
+            # Send request to OpenRouter
+            response = requests.post(
+                url="https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                data=json.dumps({
+                    "model": "deepseek/deepseek-r1-0528-qwen3-8b:free",
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": user_message
+                        }
+                    ],
+                })
+            )
+
+            # Parse response
+            if response.status_code != 200:
+                return JsonResponse({"reply": f"OpenRouter error: {response.status_code}"}, status=500)
+
+            result = response.json()
+            bot_reply = result["choices"][0]["message"]["content"]
+
+            return JsonResponse({"reply": bot_reply})
+
+        except Exception as e:
+            return JsonResponse({"reply": f"Error: {str(e)}"}, status=500)
     
 
 
