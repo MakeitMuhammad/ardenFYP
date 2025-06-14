@@ -277,7 +277,7 @@ def aibuddy_api(request):
             }
 
             headers = {
-                # "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+                "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
                 "Content-Type": "application/json"
             }
 
