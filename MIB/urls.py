@@ -39,6 +39,7 @@ urlpatterns = [
 
     #aibuddy page
     path('aibuddy/', view.aibuddy, name='aibuddy'),
+    path('aibuddy-api/', views.aibuddy_api, name='aibuddy_api'),  # AJAX handler
 
     #signup page
     path('signup/', view.signup, name='signup'),
