@@ -23,6 +23,7 @@ from django.urls import reverse
 from collections import OrderedDict
 import os
 
+
 # Create your views here.
 
 
@@ -370,62 +371,130 @@ def newproject(request):
         {"text": "What is your timeline for launching?", "example": "e.g., Hoping to launch within 3 months"},
         {"text": "What are your biggest fears, obstacles, or areas where you need help?", "example": "e.g., Struggling with marketing and building an audience"},
     ]
-
     if request.method == 'POST':
         title = request.POST.get('title')
         description = request.POST.get('description')
 
         if title and description:
-            # Create the project
+            # Create project
             project = Project.objects.create(user=request.user, title=title, description=description)
 
-            # Collect all answers
+            # Build prompt
             answers = []
             for i in range(1, len(questions) + 1):
                 answer = request.POST.get(f'answer_{i}', '')
                 answers.append(f"{questions[i-1]['text']} Answer: {answer}")
 
-            # Build the prompt
-            prompt = "Based on the following business information, list only the exact actionable tasks in numbered format needed to start and launch the business no headings no footer no starting message just list of tasks :\n\n" + "\n".join(answers)
-
-            # Call OpenAI
-            print("ENV DEBUG:", os.getenv("OPENROUTER_API_KEY"))
-            client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=os.getenv("OPENROUTER_API_KEY")
-)
-
-            # Create chat completion
-        #test
-        try:
-
-            completion = client.chat.completions.create(
-                model="deepseek/deepseek-r1:free",
-                messages=[
-                    {"role": "system", "content": "You are a startup mentor helping break down business ideas into tasks."},
-                    {"role": "user", "content": prompt}
-                ],timeout=120
+            prompt = (
+                "Based on the following business information, list only the exact actionable tasks in numbered format "
+                "needed to start and launch the business no headings no footer no starting message just list of tasks:\n\n"
+                + "\n".join(answers)
             )
 
-            # Extract tasks from response
-            content = completion.choices[0].message.content.strip()
-            task_list = [line.strip("-•0123456789. ") for line in content.split('\n') if line.strip()]
-       #test
-        except Exception as e:
-            messages.error(request, f"AI task generation failed: {e}")
-            return redirect("newproject") 
-        #---
+            # Call OpenRouter API using `requests`
+            try:
+                headers = {
+                    "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+                    "Content-Type": "application/json"
+                }
 
-            # Save tasks to DB
-            for task in task_list:
-                if task:
-                    ProjectTask.objects.create(project=project, task=task)
+                payload = {
+                    "model": "deepseek/deepseek-r1-0528-qwen3-8b:free",
+                    "messages": [
+                        {"role": "system", "content": "You are a startup mentor helping break down business ideas into tasks."},
+                        {"role": "user", "content": prompt}
+                    ]
+                }
 
-            return redirect("projects")  # Only happens after POST success
+                response = requests.post(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    headers=headers,
+                    data=json.dumps(payload),
+                    timeout=120
+                )
 
-   
+                if response.status_code != 200:
+                    raise Exception(f"OpenRouter error {response.status_code}: {response.text}")
+
+                result = response.json()
+                content = result["choices"][0]["message"]["content"].strip()
+                task_list = [line.strip("-•0123456789. ").strip() for line in content.split('\n') if line.strip()]
+
+                # Save tasks
+                for task in task_list:
+                    if task:
+                        ProjectTask.objects.create(project=project, task=task)
+
+                return redirect("projects")
+
+            except Exception as e:
+                messages.error(request, f"AI task generation failed: {str(e)}")
+                return redirect("newproject")
+
     projects = Project.objects.filter(user=request.user)
     return render(request, 'newproject.html', {'questions': questions, 'projects': projects})
+
+
+
+      
+
+#     if request.method == 'POST':
+#         title = request.POST.get('title')
+#         description = request.POST.get('description')
+
+#         if title and description:
+#             # Create the project
+#             project = Project.objects.create(user=request.user, title=title, description=description)
+
+#             # Collect all answers
+#             answers = []
+#             for i in range(1, len(questions) + 1):
+#                 answer = request.POST.get(f'answer_{i}', '')
+#                 answers.append(f"{questions[i-1]['text']} Answer: {answer}")
+
+#             # Build the prompt
+#             prompt = "Based on the following business information, list only the exact actionable tasks in numbered format needed to start and launch the business no headings no footer no starting message just list of tasks :\n\n" + "\n".join(answers)
+
+#             # Call OpenAI
+#             print("ENV DEBUG:", os.getenv("OPENROUTER_API_KEY"))
+#             client = OpenAI(
+#     base_url="https://openrouter.ai/api/v1",
+#     api_key=os.getenv("OPENROUTER_API_KEY")
+# )
+
+#             # Create chat completion
+#         #test
+#         try:
+
+#             completion = client.chat.completions.create(
+#                 model="deepseek/deepseek-r1:free",
+#                 messages=[
+#                     {"role": "system", "content": "You are a startup mentor helping break down business ideas into tasks."},
+#                     {"role": "user", "content": prompt}
+#                 ],timeout=120
+#             )
+
+#             # Extract tasks from response
+#             content = completion.choices[0].message.content.strip()
+#             task_list = [line.strip("-•0123456789. ") for line in content.split('\n') if line.strip()]
+#        #test
+#         except Exception as e:
+#             messages.error(request, f"AI task generation failed: {e}")
+#             return redirect("newproject") 
+#         #---
+
+#             # Save tasks to DB
+#             for task in task_list:
+#                 if task:
+#                     ProjectTask.objects.create(project=project, task=task)
+
+#             return redirect("projects")  # Only happens after POST success
+
+   
+#     projects = Project.objects.filter(user=request.user)
+#     return render(request, 'newproject.html', {'questions': questions, 'projects': projects})
+
+      
 
 #-------------------------------------------------
 #project tasks
